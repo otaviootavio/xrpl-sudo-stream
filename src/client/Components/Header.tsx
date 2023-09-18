@@ -13,8 +13,6 @@ export const Header: React.FC = () => {
           <li><a href="#use-cases">Use Cases</a></li>
         </ul>
       </nav>
-      <h1>SudoStream: Next-Gen Streaming Payment on XRPL</h1>
-      <p>Pay only for what you consume, down to the smallest units.</p>
     </header>
   );
 }
