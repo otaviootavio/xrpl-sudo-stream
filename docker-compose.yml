@@ -1,0 +1,27 @@
+services:
+  base:
+    image: vite-react-app
+    build:
+      context: .
+      target: development
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - ./node_modules:/usr/src/app/node_modules
+
+  app-development:
+    extends:
+      service: base
+    command: ["yarn", "run", "dev"]
+
+  app-production:
+    extends:
+      service: base
+    build:
+      target: production
+    environment:
+      - NODE_ENV=production
+    command: ["yarn", "start"]
