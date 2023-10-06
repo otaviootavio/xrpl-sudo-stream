@@ -1,4 +1,4 @@
-export const getMessage = () => {
-    return "Hello Vite + React + TypeScript!";
+export const getMessage = async () => {
+  return "Heeellllooo!";
   };
   
