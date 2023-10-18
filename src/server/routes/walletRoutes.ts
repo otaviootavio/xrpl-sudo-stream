@@ -5,6 +5,6 @@ const walletRoutes = express.Router();
 
 walletRoutes.post('/create', walletController.createFromSeed);
 walletRoutes.post('/sign', walletController.signTransaction);
-walletRoutes.post('/generate', walletController.generateWallet);
+walletRoutes.get('/generate', walletController.generateWallet);
 
 export default walletRoutes;
