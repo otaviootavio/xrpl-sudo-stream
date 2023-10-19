@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SubmitForm from "./SubmitForm";
 
 // Types
 type Transaction = {
@@ -20,16 +21,19 @@ type APIResponse = {
 
 const TransactionForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    seed: "sEdVQ6fte9nECzrboSeVzwmpLmJCdAM",
+    seed: "",
     transaction: {
-      TransactionType: "Payment",
-      Account: "r4JiVkDfLSTLqGFVMkuoEYR1n6qj84gSqb",
-      Amount: "200",
-      Destination: "r4JiVkDfLSTLqGFVMkuoEYR1n6qj84gSqb",
+      TransactionType: "",
+      Account: "",
+      Amount: "",
+      Destination: "",
     },
   });
 
-  const [response, setResponse] = useState<APIResponse | null>(null);
+  const [response, setResponse] = useState<APIResponse>({
+    tx_blob: "",
+    hash: "",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,13 +139,7 @@ const TransactionForm: React.FC = () => {
 
         <button type="submit">Submit</button>
       </form>
-
-      {response && (
-        <form className="my-5">
-          <label>tx_blob: <input readOnly type="text" value={response.tx_blob} /></label>
-          <label>hash: <input readOnly type="text" value={response.hash} /></label>
-        </form>
-      )}
+      <SubmitForm response={response} />
     </div>
   );
 };
