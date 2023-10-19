@@ -8,7 +8,13 @@ type WalletData = {
 };
 
 const WalletData = () => {
-  const [walletData, setWalletData] = useState<WalletData | null>(null);
+  const [walletData, setWalletData] = useState<WalletData>({
+    publicKey: "",
+    privateKey: "",
+    classicAddress: "",
+    seed: "",
+  });
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchWalletData = async () => {
