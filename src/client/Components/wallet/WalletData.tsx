@@ -1,25 +1,55 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 
-type Data = {
-    publicKey: string,
-    privateKey: string,
-    classicAddress: string,
-    seed: string,
-  }
+type WalletData = {
+  publicKey: string;
+  privateKey: string;
+  classicAddress: string;
+  seed: string;
+};
 
-type Props = {
-    data: Data,
-}
+const WalletData = () => {
+  const [walletData, setWalletData] = useState<WalletData | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-const WalletData = (props: Props) => {
+  const fetchWalletData = async () => {
+    setIsLoading(true);
+    await fetch("http://localhost:3000/wallet/generate", { method: "GET" })
+      .then((response) => response.json())
+      .then((data: WalletData) => {
+        setWalletData(data);
+        setIsLoading(false);
+      })
+      .catch((error) => console.error("Erro ao buscar mensagem:", error));
+  };
+
+  useEffect(() => {
+    fetchWalletData();
+  }, []);
+
   return (
-    <form>
-        <label>classicAddress <input readOnly type="text" value={props.data.classicAddress} /></label>
-        <label>privateKey <input readOnly type="text" value={props.data.privateKey} /></label>
-        <label>publicKey <input readOnly type="text" value={props.data.publicKey} /></label>
-        <label>seed <input readOnly type="text" value={props.data.seed} /></label>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <label>
+        classicAddress{" "}
+        <input readOnly type="text" value={walletData?.classicAddress} />
+      </label>
+      <label>
+        privateKey <input readOnly type="text" value={walletData?.privateKey} />
+      </label>
+      <label>
+        publicKey <input readOnly type="text" value={walletData?.publicKey} />
+      </label>
+      <label>
+        seed <input readOnly type="text" value={walletData?.seed} />
+      </label>
+      <button disabled={isLoading} onClick={fetchWalletData}>
+        {isLoading ? "Loading" : "Update"}
+      </button>
     </form>
-  )
-}
+  );
+};
 
-export default WalletData
+export default WalletData;
