@@ -30,6 +30,8 @@ const TransactionForm: React.FC = () => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [response, setResponse] = useState<APIResponse>({
     tx_blob: "",
     hash: "",
@@ -39,6 +41,8 @@ const TransactionForm: React.FC = () => {
     e.preventDefault();
 
     try {
+      setIsLoading(true)
+
       const res = await fetch("http://localhost:3000/wallet/sign", {
         method: "POST",
         headers: {
@@ -53,6 +57,7 @@ const TransactionForm: React.FC = () => {
 
       const data = await res.json();
       setResponse(data);
+      setIsLoading(false)
     } catch (error) {
       console.error(error);
     }
@@ -136,10 +141,15 @@ const TransactionForm: React.FC = () => {
             placeholder="Destination"
           />
         </label>
-
-        <button type="submit">Submit</button>
+        <button disabled={isLoading} type="submit">Submit</button>
+        <textarea
+          style={{
+            height: "100px",
+          }}
+          value={JSON.stringify(response)}
+          readOnly
+        />
       </form>
-      <SubmitForm response={response} />
     </div>
   );
 };

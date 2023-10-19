@@ -1,28 +1,27 @@
 import React, { useState } from "react";
+import { decode } from "xrpl";
 
-type Props = {
-  response: {
-    tx_blob: string;
-    hash: string;
-  };
-};
 
-const SubmitForm = (props: Props) => {
-  const [data, setData] = useState<string>("");
+const SubmitForm = () => {
+  const [submitResponse, setSubmitResponse] = useState<string>("");
+  const [txBlob, setTxBlob] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitSignedTransaction = async () => {
     try {
+      setIsLoading(true)
       const response = await fetch("http://localhost:3000/wallet/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           command: "submit",
-          tx_blob: props.response.tx_blob,
+          tx_blob: txBlob,
         }),
       });
-
       const result = await response.json();
-      setData(JSON.stringify(result, null, 2));
+
+      setSubmitResponse(JSON.stringify(result, null, 2));
+      setIsLoading(false)
     } catch (error) {
       console.error("Error submitting transaction:", error);
     }
@@ -36,17 +35,14 @@ const SubmitForm = (props: Props) => {
       className="my-5"
     >
       <label>
-        tx_blob: <input readOnly type="text" value={props.response.tx_blob} />
+        tx_blob: <input type="text" value={txBlob} onChange={(e) => {setTxBlob(e.target.value)}} />
       </label>
-      <label>
-        hash: <input readOnly type="text" value={props.response.hash} />
-      </label>
-      <button onClick={submitSignedTransaction}>Submit</button>
+      <button disabled={isLoading} onClick={submitSignedTransaction}>{isLoading ? "Loading..." : "Submit"}</button>
       <textarea
         style={{
           height: "1000px",
         }}
-        value={data}
+        value={submitResponse}
         readOnly
       />
     </form>
