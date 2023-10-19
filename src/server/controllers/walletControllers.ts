@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { WalletModel } from "../models/walletModels";
-import { Client, Transaction, Wallet } from "xrpl";
-
-const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
+import {  SubmitRequest, SubmitResponse, Transaction, TxResponse, Wallet } from "xrpl";
+import { validateBaseTransaction } from "xrpl/dist/npm/models/transactions/common";
 
 export const walletController = {
   createFromSeed: async (req: Request, res: Response) => {
@@ -44,6 +43,20 @@ export const walletController = {
       res
         .status(500)
         .json({ error: `Failed to generate wallet: ${errorMessage}` });
+    }
+  },
+  
+  submitSignedTransaction: async (_req: Request, res: Response) => {
+    try {
+
+      const txResponse: TxResponse = await WalletModel.submitTxBlob(_req.body.tx_blob);
+      res.json(txResponse);
+      
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      res
+        .status(500)
+        .json({ error: `Failed to submit signed transaction: ${errorMessage}` });
     }
   },
 };
