@@ -134,7 +134,6 @@ const TransactionForm: React.FC = () => {
         </label>
 
         <button type="submit">Submit</button>
-        <button type="submit">Submit</button>
       </form>
 
       {response && (
