@@ -14,12 +14,14 @@ const WalletData = () => {
     classicAddress: "",
     seed: "",
   });
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchWalletData = async () => {
     setIsLoading(true);
-    await fetch("http://localhost:3000/wallet/generate", { method: "GET" })
+    const currentPath: Location = window.location;
+    const curentUrl: URL = new URL(currentPath.href + "wallet/generate");
+
+    await fetch(curentUrl.href, { method: "GET" })
       .then((response) => response.json())
       .then((data: WalletData) => {
         setWalletData(data);

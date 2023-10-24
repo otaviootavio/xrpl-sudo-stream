@@ -41,9 +41,11 @@ const TransactionForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
+      const currentPath: Location = window.location;
+      const currentUrl: URL = new URL(currentPath.href + "wallet/sign");
 
-      const res = await fetch("http://localhost:3000/wallet/sign", {
+      const res = await fetch(currentUrl.href, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +59,7 @@ const TransactionForm: React.FC = () => {
 
       const data = await res.json();
       setResponse(data);
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -141,7 +143,9 @@ const TransactionForm: React.FC = () => {
             placeholder="Destination"
           />
         </label>
-        <button disabled={isLoading} type="submit">Submit</button>
+        <button disabled={isLoading} type="submit">
+          Submit
+        </button>
         <textarea
           style={{
             height: "100px",
