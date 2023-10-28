@@ -36,6 +36,14 @@ export const WalletModel = {
     return wallet;
   },
 
+  getBalances: async (address: string): Promise<Array<{ value: string; currency: string; issuer?: string | undefined }>> => {
+    const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
+    await client.connect();
+    const balanceData: Array<{ value: string; currency: string; issuer?: string | undefined }> = await client.getBalances(address)
+    await client.disconnect();
+    return balanceData;
+  },
+
   submitTxBlob: async (txBlob: string): Promise<TxResponse> => {
     const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
     await client.connect();
