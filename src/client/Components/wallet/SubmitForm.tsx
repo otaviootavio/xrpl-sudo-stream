@@ -26,6 +26,7 @@ const SubmitForm = () => {
       setIsLoading(false);
     } catch (error) {
       console.error("Error submitting transaction:", error);
+      setIsLoading(false);
     }
   };
 

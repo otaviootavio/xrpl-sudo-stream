@@ -62,6 +62,7 @@ const TransactionForm: React.FC = () => {
       setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
