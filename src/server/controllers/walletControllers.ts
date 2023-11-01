@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { WalletModel } from "../models/walletModels";
-import {  SubmitRequest, SubmitResponse, Transaction, TxResponse, Wallet } from "xrpl";
+import {
+  SubmitRequest,
+  SubmitResponse,
+  Transaction,
+  TxResponse,
+  Wallet,
+} from "xrpl";
 import { validateBaseTransaction } from "xrpl/dist/npm/models/transactions/common";
 
 export const walletController = {
@@ -16,13 +22,27 @@ export const walletController = {
         .json({ error: `Failed to create wallet from seed: ${errorMessage}` });
     }
   },
+  getBalances: async (req: Request, res: Response) => {
+    try {
+      const { address }: { address: string } = req.body;
+      const accountBallance: Array<{
+        value: string;
+        currency: string;
+        issuer?: string | undefined;
+      }> = await WalletModel.getBalances(address);
+      res.json(accountBallance);
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      res
+        .status(500)
+        .json({ error: `Failed to generate wallet: ${errorMessage}` });
+    }
+  },
 
   signTransaction: async (req: Request, res: Response) => {
     try {
-      const {
-        seed,
-        transaction,
-      }: { seed: string; transaction: Transaction } = req.body;
+      const { seed, transaction }: { seed: string; transaction: Transaction } =
+        req.body;
       const { tx_blob, hash }: { tx_blob: string; hash: string } =
         await WalletModel.signTransaction(seed, transaction);
       res.json({ tx_blob, hash });
@@ -45,18 +65,20 @@ export const walletController = {
         .json({ error: `Failed to generate wallet: ${errorMessage}` });
     }
   },
-  
+
   submitSignedTransaction: async (_req: Request, res: Response) => {
     try {
-
-      const txResponse: TxResponse = await WalletModel.submitTxBlob(_req.body.tx_blob);
+      const txResponse: TxResponse = await WalletModel.submitTxBlob(
+        _req.body.tx_blob
+      );
       res.json(txResponse);
-      
     } catch (error) {
       const errorMessage = (error as Error).message;
       res
         .status(500)
-        .json({ error: `Failed to submit signed transaction: ${errorMessage}` });
+        .json({
+          error: `Failed to submit signed transaction: ${errorMessage}`,
+        });
     }
   },
 };
