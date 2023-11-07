@@ -28,15 +28,21 @@ const Wallet: React.FC = () => {
 
   return (
     <div>
-      <WalletsRow
-        currentWallet={currentWallet}
-        walletList={walletList}
-        setWalletList={setWalletList}
-        setCurrentWallet={setCurrentWallet}
-      />
-      <WalletData currentWallet={currentWallet} />
-      <TransactionForm />
-      <SubmitForm />
+      <section>
+        <WalletsRow
+          currentWallet={currentWallet}
+          walletList={walletList}
+          setWalletList={setWalletList}
+          setCurrentWallet={setCurrentWallet}
+        />
+        <hr />
+        <WalletData currentWallet={currentWallet} />
+        <TransactionForm />
+      </section>
+      <hr />
+      <section>
+        <SubmitForm />
+      </section>
     </div>
   );
 };

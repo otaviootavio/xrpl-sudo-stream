@@ -55,7 +55,7 @@ const WalletData = (props: Props) => {
   }, [props.currentWallet]);
 
   return (
-    <section>
+    <>
       <aside>
         <label>
           classicAddress{" "}
@@ -87,7 +87,7 @@ const WalletData = (props: Props) => {
               </div>
             ))}
       </aside>
-    </section>
+    </>
   );
 };
 
