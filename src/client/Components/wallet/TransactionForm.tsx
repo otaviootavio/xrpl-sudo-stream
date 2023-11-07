@@ -38,8 +38,6 @@ const TransactionForm: React.FC = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
     try {
       setIsLoading(true);
       const currentPath: Location = window.location;
@@ -67,8 +65,7 @@ const TransactionForm: React.FC = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <aside>
         <label>
           Seed:
           <input
@@ -144,9 +141,9 @@ const TransactionForm: React.FC = () => {
             placeholder="Destination"
           />
         </label>
-        <button disabled={isLoading} type="submit">
+        <button disabled={isLoading} onClick={handleSubmit}>
           Submit
-        </button>
+        </button >
         <textarea
           style={{
             height: "100px",
@@ -154,8 +151,7 @@ const TransactionForm: React.FC = () => {
           value={JSON.stringify(response)}
           readOnly
         />
-      </form>
-    </div>
+    </aside>
   );
 };
 
