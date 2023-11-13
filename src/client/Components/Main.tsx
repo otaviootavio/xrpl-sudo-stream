@@ -1,11 +1,12 @@
 import React from "react";
 import Wallet from "./wallet/Wallet";
-import User from "./user/User";
+import UserBar from "./user/UserBar";
 
 export const Main: React.FC = () => {
+  
   return (
     <main>
-        <User />
+        <UserBar />
         <Wallet />
     </main>
   );
