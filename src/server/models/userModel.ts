@@ -14,13 +14,18 @@ import { WalletModel } from "./walletModels";
 const db: Firestore = getFirestore(app);
 
 export const userModel = {
+  deleteUserWallets: async (userData: UserRecord): Promise<WriteResult> => {
+    const docRef = db.collection("users").doc(userData.uid);
+    const writeResult: WriteResult = await docRef.delete();
+    return writeResult;
+  },
   getWalletsFromUser: async (userData: UserRecord): Promise<Wallet[]> => {
     const docRef = db.collection("users").doc(userData.uid);
     const documentSnapshot: DocumentSnapshot = await docRef.get();
 
     const walletSeeds: string[] = documentSnapshot.get("wallet");
-    if(!walletSeeds) return []
-    
+    if (!walletSeeds) return [];
+
     const wallets: Wallet[] = await Promise.all(
       walletSeeds.map(async (seed: string): Promise<Wallet> => {
         return await WalletModel.fromSeed(seed);

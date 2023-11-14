@@ -27,7 +27,37 @@ const WalletsRow = (props: Props) => {
       })
       .catch((error) => console.error("Erro ao buscar mensagem:", error));
   };
-  
+  const handleDeleteAllWallets = async () => {
+    const token = await user?.getIdToken();
+    if (!token || !user || !props.walletList) {
+      return;
+    }
+
+    const currentPath = window.location;
+    const curentUrl = new URL(
+      `${currentPath.origin}/users/${user.uid}/wallets`
+    );
+
+    try {
+      const response = await fetch(curentUrl.href, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log("Wallet deleted successfully");
+      fetchWallets();
+    } catch (error) {
+      console.error("Error deleting wallet:", error);
+    }
+  };
+
   const handleSaveWallet = async () => {
     const token = await user?.getIdToken();
     if (!token || !user || !props.walletList) {
@@ -67,35 +97,35 @@ const WalletsRow = (props: Props) => {
     }
   };
 
+  const fetchWallets = async () => {
+    const token = await user?.getIdToken();
+
+    if (!token || !user) {
+      return;
+    }
+
+    const baseUrl = window.location;
+    const fullUrl = new URL(`${baseUrl.origin}/users/${user.uid}/wallets`);
+    if (!user?.uid) return;
+
+    try {
+      const response = await fetch(fullUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      props.setWalletList(data.wallets);
+    } catch (error) {
+      console.error("Error fetching wallets:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchWallets = async () => {
-      const token = await user?.getIdToken();
-
-      if (!token || !user) {
-        return;
-      }
-
-      const baseUrl = window.location;
-      const fullUrl = new URL(`${baseUrl.origin}/users/${user.uid}/wallets`);
-      if (!user?.uid) return;
-
-      try {
-        const response = await fetch(fullUrl, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        props.setWalletList(data.wallets);
-      } catch (error) {
-        console.error("Error fetching wallets:", error);
-      }
-    };
-
     fetchWallets();
   }, [user]);
 
@@ -120,14 +150,14 @@ const WalletsRow = (props: Props) => {
         >
           <i>{isLoading ? "Loading..." : "New wallet"}</i>
         </a>
-
         <button
           onClick={async () => {
             await handleSaveWallet();
           }}
         >
           Save Wallets
-        </button> {"  "}
+        </button>{" "}
+        {"  "}
         <button
           onClick={async () => {
             await handleDeleteAllWallets();

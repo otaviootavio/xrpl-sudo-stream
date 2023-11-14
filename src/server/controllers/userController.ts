@@ -7,6 +7,20 @@ import { Wallet } from "xrpl";
 import { DocumentSnapshot, WriteResult } from "firebase-admin/firestore";
 
 export const userController = {
+  deleteWalletsFromUser: async (req: Request, res: Response) => {
+    try {
+      const { uid } = req.params;
+      const user: UserRecord = await userModel.getUserByUID(uid);
+      await userModel.deleteUserWallets(user);
+      res.status(200).json({message: "Deletion was successful"});
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "An unexpected error occurred" });
+      }
+    }
+  },
   getWalletsFromUser: async (req: Request, res: Response) => {
     try {
       const { uid } = req.params;
