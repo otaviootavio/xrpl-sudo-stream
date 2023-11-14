@@ -101,6 +101,7 @@ const WalletsRow = (props: Props) => {
     const token = await user?.getIdToken();
 
     if (!token || !user) {
+      props.setWalletList(null);
       return;
     }
 
