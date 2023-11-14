@@ -40,6 +40,7 @@ const WalletData = (props: Props) => {
   };
 
   useEffect(() => {
+    if(!props.currentWallet) return;
     // When changing between wallets, the data
     // arrives with delay. This cancel de data fetch
 
