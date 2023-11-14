@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 type Props = {
-  currentWallet: WalletDataType;
+  currentWallet: WalletDataType | null;
 };
 
 const WalletData = (props: Props) => {
@@ -20,7 +20,7 @@ const WalletData = (props: Props) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ address: props.currentWallet.classicAddress }),
+      body: JSON.stringify({ address: props.currentWallet?.classicAddress }),
     })
       .then((response) => response.json())
       .then(
@@ -42,7 +42,7 @@ const WalletData = (props: Props) => {
   useEffect(() => {
     // When changing between wallets, the data
     // arrives with delay. This cancel de data fetch
-    
+
     const abortController: AbortController = new AbortController();
     const signal: AbortSignal = abortController.signal;
     setIsLoading(true);
@@ -62,19 +62,28 @@ const WalletData = (props: Props) => {
           <input
             readOnly
             type="text"
-            value={props.currentWallet?.classicAddress}
+            value={props.currentWallet?.classicAddress || ""}
           />
         </label>
         <label>
           privateKey{" "}
-          <input readOnly type="text" value={props.currentWallet?.privateKey} />
+          <input
+            readOnly
+            type="text"
+            value={props.currentWallet?.privateKey || ""}
+          />
         </label>
         <label>
           publicKey{" "}
-          <input readOnly type="text" value={props.currentWallet?.publicKey} />
+          <input
+            readOnly
+            type="text"
+            value={props.currentWallet?.publicKey || ""}
+          />
         </label>
         <label>
-          seed <input readOnly type="text" value={props.currentWallet?.seed} />
+          seed{" "}
+          <input readOnly type="text" value={props.currentWallet?.seed || ""} />
         </label>
       </aside>
       <aside>
@@ -82,7 +91,7 @@ const WalletData = (props: Props) => {
           ? "Loading..."
           : Array.isArray(accountBalances) &&
             accountBalances.map((e) => (
-              <div key={props.currentWallet.publicKey}>
+              <div key={props.currentWallet?.publicKey}>
                 {e.currency} {e.value}
               </div>
             ))}

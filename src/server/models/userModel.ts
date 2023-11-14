@@ -1,18 +1,46 @@
 import { getAuth, UserRecord } from "firebase-admin/auth";
 import { User } from "./userTypes";
-import { credential, initializeApp, ServiceAccount } from "firebase-admin";
-import firebaseCredentials from "../util/firebase-credentials.json";
-import firebaseConfig from "../util/firebase-config.json";
-import admin from 'firebase-admin';
+import { app } from "../firebase";
+import {
+  getFirestore,
+  Firestore,
+  FieldValue,
+  WriteResult,
+  DocumentSnapshot,
+} from "firebase-admin/firestore";
+import { Wallet } from "xrpl";
+import { WalletModel } from "./walletModels";
 
-const serviceAccount = firebaseCredentials as ServiceAccount;
-
-const app = admin.initializeApp({
-  credential: credential.cert(serviceAccount),
-  databaseURL: firebaseConfig.authDomain,
-});
+const db: Firestore = getFirestore(app);
 
 export const userModel = {
+  getWalletsFromUser: async (userData: UserRecord): Promise<Wallet[]> => {
+    const docRef = db.collection("users").doc(userData.uid);
+    const documentSnapshot: DocumentSnapshot = await docRef.get();
+
+    const walletSeeds: string[] = documentSnapshot.get("wallet");
+    if(!walletSeeds) return []
+    
+    const wallets: Wallet[] = await Promise.all(
+      walletSeeds.map(async (seed: string): Promise<Wallet> => {
+        return await WalletModel.fromSeed(seed);
+      })
+    );
+    return wallets;
+  },
+  addWalletToUser: async (
+    userData: UserRecord,
+    wallet: Wallet
+  ): Promise<WriteResult> => {
+    const docRef = db.collection("users").doc(userData.uid);
+    const writeResult: WriteResult = await docRef.set(
+      {
+        wallet: FieldValue.arrayUnion(wallet.seed),
+      },
+      { merge: true }
+    );
+    return writeResult;
+  },
   createNewUser: async (userData: User): Promise<UserRecord> => {
     return getAuth(app).createUser({
       uid: userData.uid,
@@ -40,5 +68,8 @@ export const userModel = {
     } while (pageToken);
 
     return allUsers;
-  }
+  },
+  getUserByUID: async (userUid: string): Promise<UserRecord> => {
+    return getAuth(app).getUser(userUid);
+  },
 };

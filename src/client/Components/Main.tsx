@@ -1,13 +1,14 @@
 import React from "react";
 import Wallet from "./wallet/Wallet";
-import UserBar from "./user/UserBar";
+import { UserProvider } from "./user/UserContext";
 
 export const Main: React.FC = () => {
   
   return (
     <main>
-        <UserBar />
-        <Wallet />
+        <UserProvider>
+          <Wallet />
+        </UserProvider>
     </main>
   );
 };

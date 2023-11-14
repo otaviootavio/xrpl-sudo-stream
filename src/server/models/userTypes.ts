@@ -1,4 +1,7 @@
 // TODO
+
+import { Wallet } from "xrpl";
+
 // UPDATE USER MODEL
 export type User = {
     uid: string;
@@ -9,5 +12,6 @@ export type User = {
     displayName?: string;
     photoURL?: string;
     disabled?: boolean;
+    wallets?: Wallet[];
   };
   
