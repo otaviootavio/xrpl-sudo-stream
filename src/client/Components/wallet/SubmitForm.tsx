@@ -32,7 +32,7 @@ const SubmitForm = () => {
 
   return (
     <>
-      <form>
+      <aside>
         <label>tx_blob: </label>
         <input
           type="text"
@@ -44,10 +44,8 @@ const SubmitForm = () => {
         <button disabled={isLoading} onClick={submitSignedTransaction}>
           {isLoading ? "Loading..." : "Submit"}
         </button>
-      </form>
-      <pre>
-        <code>{submitResponse}</code>
-      </pre>
+        <textarea style={{ height: "100px" }} value={submitResponse} readOnly />
+      </aside>
     </>
   );
 };
