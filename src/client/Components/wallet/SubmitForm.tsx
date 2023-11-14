@@ -31,14 +31,9 @@ const SubmitForm = () => {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-      className="my-5"
-    >
-      <label>
-        tx_blob:{" "}
+    <>
+      <aside>
+        <label>tx_blob: </label>
         <input
           type="text"
           value={txBlob}
@@ -46,18 +41,12 @@ const SubmitForm = () => {
             setTxBlob(e.target.value);
           }}
         />
-      </label>
-      <button disabled={isLoading} onClick={submitSignedTransaction}>
-        {isLoading ? "Loading..." : "Submit"}
-      </button>
-      <textarea
-        style={{
-          height: "1000px",
-        }}
-        value={submitResponse}
-        readOnly
-      />
-    </form>
+        <button disabled={isLoading} onClick={submitSignedTransaction}>
+          {isLoading ? "Loading..." : "Submit"}
+        </button>
+        <textarea style={{ height: "100px" }} value={submitResponse} readOnly />
+      </aside>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Wallet, Client, Transaction, SubmitResponse, TxResponse, SubmitRequest, decode } from "xrpl";
+import { Wallet, Client, Transaction, TxResponse } from "xrpl";
 
 export const WalletModel = {
   fromSeed: async (seed: string): Promise<Wallet> => {
