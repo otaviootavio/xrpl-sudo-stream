@@ -1,8 +1,7 @@
 import { credential, initializeApp, ServiceAccount } from "firebase-admin";
-import firebaseCredentials from "./util/firebase-credentials.json";
-import firebaseConfig from "./util/firebase-config.json";
+import firebaseCredentials from "../../firebase-credentials.json";
+import firebaseConfig from "../../firebase-config.json";
 import admin from "firebase-admin";
-import { cert } from "firebase-admin/app";
 
 const serviceAccount = firebaseCredentials as ServiceAccount;
 

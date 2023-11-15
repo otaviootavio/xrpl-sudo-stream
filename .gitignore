@@ -23,6 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 .env
-src/server/util/firebase-config.json
-src/server/util/firebase-credentials.json
-src/client/Components/auth/firebase-config.json
+firebase-config.json
+firebase-credentials.json

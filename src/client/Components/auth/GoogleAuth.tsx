@@ -12,7 +12,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { FirebaseApp, initializeApp } from "firebase/app";
-import firebaseConfig from "./firebase-config.json";
+import firebaseConfig from "../../../../firebase-config.json";
 
 
 const app: FirebaseApp = initializeApp(firebaseConfig);

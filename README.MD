@@ -4,3 +4,6 @@
 ```yarn install``
 3. Run the client and server
 ```yarn run dev``
+
+### Building
+Add the firebase credentials and firebase config json files at root.
