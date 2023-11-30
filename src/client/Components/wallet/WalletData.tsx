@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import CopyableText from "./metadatas/CopyableText";
+import SecretData from "./metadatas/SecretData";
 
 type Props = {
   currentWallet: WalletDataType | null;
@@ -58,44 +60,21 @@ const WalletData = (props: Props) => {
   return (
     <>
       <aside>
-        <label>
-          classicAddress{" "}
-          <input
-            readOnly
-            type="text"
-            value={props.currentWallet?.classicAddress || ""}
-          />
-        </label>
-        <label>
-          privateKey{" "}
-          <input
-            readOnly
-            type="text"
-            value={props.currentWallet?.privateKey || ""}
-          />
-        </label>
-        <label>
-          publicKey{" "}
-          <input
-            readOnly
-            type="text"
-            value={props.currentWallet?.publicKey || ""}
-          />
-        </label>
-        <label>
-          seed{" "}
-          <input readOnly type="text" value={props.currentWallet?.seed || ""} />
-        </label>
+        {props.currentWallet && (
+          <>
+            <CopyableText text={props.currentWallet.classicAddress} label="Account Address" />
+            <CopyableText text={props.currentWallet.publicKey} label="Public Key" />
+            <SecretData text={props.currentWallet.privateKey} label="Private Key" />
+            <SecretData text={props.currentWallet.seed} label="Seed" />
+          </>
+        )}
       </aside>
       <aside>
-        {isLoading
-          ? "Loading..."
-          : Array.isArray(accountBalances) &&
-            accountBalances.map((e) => (
-              <div key={props.currentWallet?.publicKey}>
-                {e.currency} {e.value}
-              </div>
-            ))}
+        {isLoading ? "Loading..." : accountBalances.map((e, index) => (
+          <div key={index}>
+            {e.currency} {e.value}
+          </div>
+        ))}
       </aside>
     </>
   );

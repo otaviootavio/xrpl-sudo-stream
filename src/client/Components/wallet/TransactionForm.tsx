@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import SubmitForm from "./SubmitForm";
-
-// Types
-type Transaction = {
-  TransactionType: string;
-  Account: string;
-  Amount: string;
-  Destination: string;
-};
+import { toast } from "react-toastify";
+import { TxResponse } from "xrpl";
 
 type FormData = {
   seed: string;
-  transaction: Transaction;
+  amount: string;
+  destination: string;
 };
 
 type APIResponse = {
@@ -19,138 +13,90 @@ type APIResponse = {
   hash: string;
 };
 
-const TransactionForm: React.FC = () => {
+type Props = {
+  currentWallet: WalletDataType;
+};
+
+const TransactionForm = (props: Props) => {
   const [formData, setFormData] = useState<FormData>({
-    seed: "",
-    transaction: {
-      TransactionType: "",
-      Account: "",
-      Amount: "",
-      Destination: "",
-    },
+    seed: props.currentWallet.seed,
+    amount: "",
+    destination: "",
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [response, setResponse] = useState<APIResponse>({
-    tx_blob: "",
-    hash: "",
-  });
+  const [response, setResponse] = useState<TxResponse | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       setIsLoading(true);
       const currentPath: Location = window.location;
-      const currentUrl: URL = new URL(currentPath.href + "wallet/sign");
+      const currentUrl: URL = new URL(currentPath.href + "wallet/payment");
+      const { seed, amount, destination } = formData;
+      console.log([seed, amount, destination]);
 
       const res = await fetch(currentUrl.href, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          seed: seed,
+          amount: `${amount}000000`,
+          destination: destination,
+        }),
       });
 
       if (!res.ok) {
         throw new Error("Failed to complete the transaction.");
       }
 
-      const data = await res.json();
+      const data: TxResponse = await res.json();
       setResponse(data);
       setIsLoading(false);
+      toast("Sucess!");
     } catch (error) {
       console.error(error);
+      toast.error("Error!");
       setIsLoading(false);
     }
   };
 
   return (
     <aside>
-        <label>
-          Seed:
-          <input
-            type="text"
-            value={formData.seed}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, seed: e.target.value }))
-            }
-            placeholder="Seed"
-          />
-        </label>
-        <label>
-          Transaction Type:
-          <input
-            type="text"
-            value={formData.transaction.TransactionType}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                transaction: {
-                  ...prev.transaction,
-                  TransactionType: e.target.value,
-                },
-              }))
-            }
-            placeholder="Transaction Type"
-          />
-        </label>
-        <label>
-          Account:
-          <input
-            type="text"
-            value={formData.transaction.Account}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                transaction: { ...prev.transaction, Account: e.target.value },
-              }))
-            }
-            placeholder="Account"
-          />
-        </label>
-
-        <label>
-          Amount:
-          <input
-            type="text"
-            value={formData.transaction.Amount}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                transaction: { ...prev.transaction, Amount: e.target.value },
-              }))
-            }
-            placeholder="Amount"
-          />
-        </label>
-
-        <label>
-          Destination:
-          <input
-            type="text"
-            value={formData.transaction.Destination}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                transaction: {
-                  ...prev.transaction,
-                  Destination: e.target.value,
-                },
-              }))
-            }
-            placeholder="Destination"
-          />
-        </label>
-        <button disabled={isLoading} onClick={handleSubmit}>
-          Submit
-        </button >
-        <textarea
-          style={{
-            height: "100px",
-          }}
-          value={JSON.stringify(response)}
-          readOnly
+      <label>
+        Amount (XRP):
+        <input
+          type="number"
+          value={formData.amount}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              amount: e.target.value,
+            }))
+          }
+          placeholder="Amount"
         />
+      </label>
+
+      <label>
+        Destination:
+        <input
+          type="text"
+          value={formData.destination}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              destination: e.target.value,
+            }))
+          }
+          placeholder="Destination"
+        />
+      </label>
+      <button disabled={isLoading} onClick={handleSubmit}>
+        {!isLoading ? "Submit" : "Loading"}
+      </button>
     </aside>
   );
 };

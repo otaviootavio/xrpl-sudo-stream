@@ -81,4 +81,19 @@ export const walletController = {
         });
     }
   },
+  paymentAmmountFromSeed: async (_req: Request, res: Response) => {
+    try {
+      const txResponse: TxResponse = await WalletModel.paymentAmmountFromSeed(
+        _req.body.seed, _req.body.amount, _req.body.destination 
+      );
+      res.json(txResponse);
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      res
+        .status(500)
+        .json({
+          error: `Failed to submit signed transaction: ${errorMessage}`,
+        });
+    }
+  },
 };

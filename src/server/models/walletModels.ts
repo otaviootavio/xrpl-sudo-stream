@@ -18,12 +18,13 @@ export const WalletModel = {
     const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
     await client.connect();
 
-    const wallet: Wallet = Wallet.fromSeed(seed);  
+    const wallet: Wallet = Wallet.fromSeed(seed);
     const preparedTx: Transaction = await client.autofill(transaction);
-    const {tx_blob, hash}: {tx_blob: string, hash: string} = await wallet.sign(preparedTx);
+    const { tx_blob, hash }: { tx_blob: string; hash: string } =
+      await wallet.sign(preparedTx);
 
     await client.disconnect();
-    return {tx_blob, hash};
+    return { tx_blob, hash };
   },
 
   generate: async (): Promise<Wallet> => {
@@ -31,15 +32,23 @@ export const WalletModel = {
     await client.connect();
 
     const wallet: Wallet = Wallet.generate();
-    await client.fundWallet(wallet)
+    await client.fundWallet(wallet);
     await client.disconnect();
     return wallet;
   },
 
-  getBalances: async (address: string): Promise<Array<{ value: string; currency: string; issuer?: string | undefined }>> => {
+  getBalances: async (
+    address: string
+  ): Promise<
+    Array<{ value: string; currency: string; issuer?: string | undefined }>
+  > => {
     const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
     await client.connect();
-    const balanceData: Array<{ value: string; currency: string; issuer?: string | undefined }> = await client.getBalances(address)
+    const balanceData: Array<{
+      value: string;
+      currency: string;
+      issuer?: string | undefined;
+    }> = await client.getBalances(address);
     await client.disconnect();
     return balanceData;
   },
@@ -47,7 +56,33 @@ export const WalletModel = {
   submitTxBlob: async (txBlob: string): Promise<TxResponse> => {
     const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
     await client.connect();
-    const response: TxResponse = await client.submitAndWait(txBlob)
+    const response: TxResponse = await client.submitAndWait(txBlob);
+    await client.disconnect();
+    return response;
+  },
+
+  paymentAmmountFromSeed: async (
+    seed: string,
+    amount: string,
+    destination: string
+  ): Promise<TxResponse> => {
+    const client: Client = new Client("wss://s.altnet.rippletest.net:51233");
+    await client.connect();
+    const wallet: Wallet = Wallet.fromSeed(seed);
+    
+    const paymentTx = {
+      TransactionType: "Payment",
+      Account: wallet.address,
+      Amount: amount,
+      Destination: destination,
+    } as Transaction;
+
+    console.log(paymentTx);
+
+    const preparedTx = await client.autofill(paymentTx);
+    const signedTx = wallet.sign(preparedTx);
+    const response: TxResponse = await client.submitAndWait(signedTx.tx_blob);
+
     await client.disconnect();
     return response;
   },

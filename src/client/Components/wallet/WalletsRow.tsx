@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useUserContext } from "../user/UserContext";
+import Identicon from "./Identicon";
 
 type Props = {
   setCurrentWallet: Dispatch<SetStateAction<WalletDataType | null>>;
@@ -135,12 +136,16 @@ const WalletsRow = (props: Props) => {
       <p>
         {props.walletList?.map((e) =>
           e == props.currentWallet ? (
-            <a onClick={() => props.setCurrentWallet(e)} key={e.publicKey}>
-              <b>... {e.seed.slice(-5)}</b>
+            <a key={e.publicKey}>
+              <b>
+                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} publicKey={e.publicKey} />
+              </b>
             </a>
           ) : (
-            <a onClick={() => props.setCurrentWallet(e)} key={e.publicKey}>
-              <i>... {e.seed.slice(-5)}</i>
+            <a key={e.publicKey}>
+              <i>
+                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} publicKey={e.publicKey} />
+              </i>
             </a>
           )
         )}
