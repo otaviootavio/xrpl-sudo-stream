@@ -77,8 +77,6 @@ export const WalletModel = {
       Destination: destination,
     } as Transaction;
 
-    console.log(paymentTx);
-
     const preparedTx = await client.autofill(paymentTx);
     const signedTx = wallet.sign(preparedTx);
     const response: TxResponse = await client.submitAndWait(signedTx.tx_blob);
