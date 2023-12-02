@@ -136,15 +136,15 @@ const WalletsRow = (props: Props) => {
       <p>
         {props.walletList?.map((e) =>
           e == props.currentWallet ? (
-            <a key={e.publicKey}>
+            <a key={e.classicAddress}>
               <b>
-                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} publicKey={e.publicKey} />
+                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} classicAddress={e.classicAddress} />
               </b>
             </a>
           ) : (
             <a key={e.publicKey}>
               <i>
-                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} publicKey={e.publicKey} />
+                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} classicAddress={e.classicAddress} />
               </i>
             </a>
           )
