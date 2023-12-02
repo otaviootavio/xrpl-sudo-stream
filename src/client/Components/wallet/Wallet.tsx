@@ -16,11 +16,9 @@ const Wallet: React.FC = () => {
           setWalletList={setWalletList}
           setCurrentWallet={setCurrentWallet}
         />
-        <hr />
-        <WalletData currentWallet={currentWallet} />
+        {currentWallet && <WalletData currentWallet={currentWallet} />}
         {currentWallet && <TransactionForm  key={currentWallet.seed} currentWallet={currentWallet}/>}
       </section>
-      <hr />
     </div>
   );
 };
