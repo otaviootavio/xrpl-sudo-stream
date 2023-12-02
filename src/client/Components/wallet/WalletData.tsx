@@ -71,9 +71,10 @@ const WalletData = (props: Props) => {
         )}
       </aside>
       <aside>
+        <h2>Account ballance</h2>
         {isLoading ? "Loading..." : accountBalances.map((e, index) => (
           <div key={index}>
-            {e.currency} {e.value}
+            <b>{e.currency}:</b> {e.value}
           </div>
         ))}
       </aside>
