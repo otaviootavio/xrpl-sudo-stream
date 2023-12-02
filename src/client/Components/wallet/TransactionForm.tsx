@@ -8,11 +8,6 @@ type FormData = {
   destination: string;
 };
 
-type APIResponse = {
-  tx_blob: string;
-  hash: string;
-};
-
 type Props = {
   currentWallet: WalletDataType;
 };
@@ -65,6 +60,7 @@ const TransactionForm = (props: Props) => {
 
   return (
     <aside>
+      <h2>Payments</h2>
       <label>
         Amount (XRP):
         <input

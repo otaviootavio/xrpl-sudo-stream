@@ -60,6 +60,7 @@ const WalletData = (props: Props) => {
   return (
     <>
       <aside>
+        <h2>Account data</h2>
         {props.currentWallet && (
           <>
             <CopyableText text={props.currentWallet.classicAddress} label="Account Address" />
