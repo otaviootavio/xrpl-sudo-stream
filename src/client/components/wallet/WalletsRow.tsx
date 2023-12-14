@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useUserContext } from "../user/UserContext";
+import { useUserContext } from "../../context/UserContext";
 import Identicon from "./Identicon";
 
 type Props = {
@@ -138,13 +138,21 @@ const WalletsRow = (props: Props) => {
           e == props.currentWallet ? (
             <a key={e.classicAddress}>
               <b>
-                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} classicAddress={e.classicAddress} />
+                <Identicon
+                  thisWallet={e}
+                  setCurrentWallet={props.setCurrentWallet}
+                  classicAddress={e.classicAddress}
+                />
               </b>
             </a>
           ) : (
             <a key={e.publicKey}>
               <i>
-                <Identicon thisWallet={e} setCurrentWallet={props.setCurrentWallet} classicAddress={e.classicAddress} />
+                <Identicon
+                  thisWallet={e}
+                  setCurrentWallet={props.setCurrentWallet}
+                  classicAddress={e.classicAddress}
+                />
               </i>
             </a>
           )
