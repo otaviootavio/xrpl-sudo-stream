@@ -1,6 +1,6 @@
-import React from 'react';
-import './App.css';
-import { Main } from './Components/Main';
+import React from "react";
+import "./App.css";
+import { Main } from "./components/Main";
 
 export const App: React.FC = () => {
   return (
@@ -8,4 +8,4 @@ export const App: React.FC = () => {
       <Main />
     </>
   );
-}
+};

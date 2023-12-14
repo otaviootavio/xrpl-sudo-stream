@@ -25,4 +25,4 @@ dist-ssr
 .env
 src/server/util/firebase-config.json
 src/server/util/firebase-credentials.json
-src/client/Components/auth/firebase-config.json
+src/client/components/auth/firebase-config.json
