@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import WalletData from "./WalletData";
 import TransactionForm from "./TransactionForm";
-import SubmitForm from "./SubmitForm";
 import WalletsRow from "./WalletsRow";
 
 const Wallet: React.FC = () => {
@@ -17,13 +16,8 @@ const Wallet: React.FC = () => {
           setWalletList={setWalletList}
           setCurrentWallet={setCurrentWallet}
         />
-        <hr />
-        <WalletData currentWallet={currentWallet} />
-        <TransactionForm />
-      </section>
-      <hr />
-      <section>
-        <SubmitForm />
+        {currentWallet && <WalletData currentWallet={currentWallet} />}
+        {currentWallet && <TransactionForm  key={currentWallet.seed} currentWallet={currentWallet}/>}
       </section>
     </div>
   );

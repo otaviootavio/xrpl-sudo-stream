@@ -1,0 +1,19 @@
+.copyable-text .input-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .copyable-text input {
+    padding-right: 60px;
+    width: calc(100% - 60px);
+  }
+  
+  .copyable-text .copy-button {
+    position: absolute;
+    right: 0;
+    top: 6px;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  
