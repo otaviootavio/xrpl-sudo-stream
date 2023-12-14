@@ -14,10 +14,9 @@ import {
 import { FirebaseApp, initializeApp } from "firebase/app";
 import firebaseConfig from "./firebase-config.json";
 
-
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
-await setPersistence(auth, browserSessionPersistence);
+setPersistence(auth, browserSessionPersistence);
 const provider: GoogleAuthProvider = new GoogleAuthProvider();
 
 const signInwithGoogle =
@@ -46,8 +45,10 @@ const signOutGoogle = async () => {
   signOut(auth);
 };
 
-const onAuthStateChangeGoogle = (setState: React.Dispatch<React.SetStateAction<User | null>>) => {
-  onAuthStateChanged(auth, setState)
-}
+const onAuthStateChangeGoogle = (
+  setState: React.Dispatch<React.SetStateAction<User | null>>
+) => {
+  onAuthStateChanged(auth, setState);
+};
 
 export { signOutGoogle, signInwithGoogle, onAuthStateChangeGoogle };
