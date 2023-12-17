@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import { TxResponse } from "xrpl";
 import { useAccountContext } from "../../context/AccountContext";
+import { toast } from "sonner";
 
 type FormData = {
   seed: string;
@@ -20,16 +20,15 @@ const TransactionForm = (props: Props) => {
     destination: "",
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const [response, setResponse] = useState<TxResponse | null>(null);
-
   const handleSubmit = async (e: React.FormEvent) => {
     try {
-      setIsLoading(true);
       const currentPath: Location = window.location;
       const currentUrl: URL = new URL(currentPath.href + "wallet/payment");
       const { seed, amount, destination } = formData;
+
+      toast.message("Transaction was submitted", {
+        description: `Amount: ${amount} XRP`,
+      });
 
       const res = await fetch(currentUrl.href, {
         method: "POST",
@@ -46,15 +45,10 @@ const TransactionForm = (props: Props) => {
       if (!res.ok) {
         throw new Error("Failed to complete the transaction.");
       }
-
-      const data: TxResponse = await res.json();
-      setResponse(data);
-      setIsLoading(false);
-      toast("Sucess!");
+      toast.success("Transaction was a success!");
     } catch (error) {
+      toast.error("An error occurred on transaction!");
       console.error(error);
-      toast.error("Error!");
-      setIsLoading(false);
     }
   };
 
@@ -90,9 +84,7 @@ const TransactionForm = (props: Props) => {
           placeholder="Destination"
         />
       </label>
-      <button disabled={isLoading} onClick={handleSubmit}>
-        {!isLoading ? "Submit" : "Loading"}
-      </button>
+      <button onClick={handleSubmit}>{"Submit"}</button>
     </aside>
   );
 };

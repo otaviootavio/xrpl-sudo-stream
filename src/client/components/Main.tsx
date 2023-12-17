@@ -1,9 +1,9 @@
 import React from "react";
 import Wallet from "./wallet/Wallet";
 import { UserProvider } from "../context/UserContext";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AccountProvider } from "../context/AccountContext";
+import { Toaster } from "sonner";
 
 export const Main: React.FC = () => {
   return (
@@ -11,7 +11,7 @@ export const Main: React.FC = () => {
       <UserProvider>
         <AccountProvider>
           <Wallet />
-          <ToastContainer />
+          <Toaster richColors expand={true} />
         </AccountProvider>
       </UserProvider>
     </main>

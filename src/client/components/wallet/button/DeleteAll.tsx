@@ -1,6 +1,7 @@
 import React from "react";
 import { useUserContext } from "../../../context/UserContext";
 import { useAccountContext } from "../../../context/AccountContext";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -21,12 +22,23 @@ const DeleteAll = (props: Props) => {
     if (!user?.uid) return;
 
     try {
-      const response = await fetch(fullUrl, {
+      const awaitResponse = fetch(fullUrl, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
+
+      toast.promise(awaitResponse, {
+        loading: "Saving wallets...",
+        success: () => {
+          return `Successfully saved the wallets!`;
+        },
+        error: "It was not possible save the walles!",
+      });
+
+      const response = await awaitResponse;
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

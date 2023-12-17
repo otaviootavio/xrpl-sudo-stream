@@ -1,6 +1,7 @@
 import React from "react";
 import { useUserContext } from "../../../context/UserContext";
 import { useAccountContext } from "../../../context/AccountContext";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -29,7 +30,7 @@ const SaveWallet = (props: Props) => {
     );
 
     try {
-      const response = await fetch(curentUrl.href, {
+      const awaitResponse = fetch(curentUrl.href, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +38,16 @@ const SaveWallet = (props: Props) => {
         },
         body: JSON.stringify({ walletSeeds: walletSeeds }),
       });
+
+      toast.promise(awaitResponse, {
+        loading: "Saving wallets...",
+        success: () => {
+          return `Successfully saved the wallets!`;
+        },
+        error: "It was not possible save the walles!",
+      });
+
+      const response = await awaitResponse;
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
