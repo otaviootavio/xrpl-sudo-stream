@@ -3,13 +3,13 @@ import {
   onAuthStateChangeGoogle,
   signInwithGoogle,
   signOutGoogle,
-} from "../auth/GoogleAuth";
+} from "../components/auth/GoogleAuth";
 import { User } from "firebase/auth";
 
 interface IUserContext {
   user: User | null;
 }
-const UserContext = createContext<IUserContext>({ user: null});
+const UserContext = createContext<IUserContext>({ user: null });
 
 const useUserContext = () => useContext<IUserContext>(UserContext);
 

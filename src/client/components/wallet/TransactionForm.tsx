@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { TxResponse } from "xrpl";
+import { useAccountContext } from "../../context/AccountContext";
 
 type FormData = {
   seed: string;
@@ -8,13 +9,13 @@ type FormData = {
   destination: string;
 };
 
-type Props = {
-  currentWallet: WalletDataType;
-};
+type Props = {};
 
 const TransactionForm = (props: Props) => {
+  const { account, setAccount } = useAccountContext();
+
   const [formData, setFormData] = useState<FormData>({
-    seed: props.currentWallet.seed,
+    seed: account?.seed || "",
     amount: "",
     destination: "",
   });
@@ -29,7 +30,6 @@ const TransactionForm = (props: Props) => {
       const currentPath: Location = window.location;
       const currentUrl: URL = new URL(currentPath.href + "wallet/payment");
       const { seed, amount, destination } = formData;
-      console.log([seed, amount, destination]);
 
       const res = await fetch(currentUrl.href, {
         method: "POST",
