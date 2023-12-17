@@ -32,9 +32,9 @@ const DeleteAll = (props: Props) => {
       toast.promise(awaitResponse, {
         loading: "Saving wallets...",
         success: () => {
-          return `Successfully saved the wallets!`;
+          return `Successfully deleted the wallets!`;
         },
-        error: "It was not possible save the walles!",
+        error: "It was not possible delete the walles!",
       });
 
       const response = await awaitResponse;
