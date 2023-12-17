@@ -1,23 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import WalletData from "./WalletData";
 import TransactionForm from "./TransactionForm";
 import WalletsRow from "./WalletsRow";
+import { useAccountContext } from "../../context/AccountContext";
 
 const Wallet: React.FC = () => {
-  const [currentWallet, setCurrentWallet] = useState<WalletDataType | null>(null);
-  const [walletList, setWalletList] = useState<WalletDataType[] | null>(null);
+  const { account, setAccount } = useAccountContext();
 
   return (
     <div>
       <section>
-        <WalletsRow
-          currentWallet={currentWallet}
-          walletList={walletList}
-          setWalletList={setWalletList}
-          setCurrentWallet={setCurrentWallet}
-        />
-        {currentWallet && <WalletData currentWallet={currentWallet} />}
-        {currentWallet && <TransactionForm  key={currentWallet.seed} currentWallet={currentWallet}/>}
+        <WalletsRow />
+        {account && <WalletData />}
+        {account && <TransactionForm />}
       </section>
     </div>
   );

@@ -1,108 +1,24 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import Identicon from "./Identicon";
+import { useAccountContext } from "../../context/AccountContext";
+import SaveWallet from "./button/SaveWallets";
+import DeleteAll from "./button/DeleteAll";
+import NewWallet from "./button/NewWallet";
 
-type Props = {
-  setCurrentWallet: Dispatch<SetStateAction<WalletDataType | null>>;
-  setWalletList: Dispatch<SetStateAction<WalletDataType[] | null>>;
-  walletList: WalletDataType[] | null;
-  currentWallet: WalletDataType | null;
-};
+type Props = {};
 
 const WalletsRow = (props: Props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useUserContext();
-
-  const fetchNewWalletData = async () => {
-    setIsLoading(true);
-    const currentPath: Location = window.location;
-    const curentUrl: URL = new URL(currentPath.href + "wallet/generate");
-
-    await fetch(curentUrl.href, { method: "GET" })
-      .then((response) => response.json())
-      .then((data: WalletDataType) => {
-        props.walletList?.length == 0 ? props.setCurrentWallet(data) : "";
-
-        props.setWalletList((walletList) => [...(walletList || []), data]);
-        setIsLoading(false);
-      })
-      .catch((error) => console.error("Erro ao buscar mensagem:", error));
-  };
-  const handleDeleteAllWallets = async () => {
-    const token = await user?.getIdToken();
-    if (!token || !user || !props.walletList) {
-      return;
-    }
-
-    const currentPath = window.location;
-    const curentUrl = new URL(
-      `${currentPath.origin}/users/${user.uid}/wallets`
-    );
-
-    try {
-      const response = await fetch(curentUrl.href, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      console.log("Wallet deleted successfully");
-      fetchWallets();
-    } catch (error) {
-      console.error("Error deleting wallet:", error);
-    }
-  };
-
-  const handleSaveWallet = async () => {
-    const token = await user?.getIdToken();
-    if (!token || !user || !props.walletList) {
-      return;
-    }
-
-    const walletSeeds: string[] = props.walletList?.map(
-      (wallet: WalletDataType): string => {
-        return wallet.seed;
-      }
-    );
-    if (!walletSeeds) {
-      return;
-    }
-
-    const currentPath = window.location;
-    const curentUrl = new URL(
-      `${currentPath.origin}/users/${user.uid}/wallets`
-    );
-
-    try {
-      const response = await fetch(curentUrl.href, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ walletSeeds: walletSeeds }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      console.log("Wallet saved successfully");
-    } catch (error) {
-      console.error("Error saving wallet:", error);
-    }
-  };
+  const { account, accounts, setAccounts } = useAccountContext();
+  const [isLoadingWalletList, setIsLoadingWalletList] =
+    useState<boolean>(false);
 
   const fetchWallets = async () => {
     const token = await user?.getIdToken();
 
     if (!token || !user) {
-      props.setWalletList(null);
+      setAccounts(null);
       return;
     }
 
@@ -111,6 +27,7 @@ const WalletsRow = (props: Props) => {
     if (!user?.uid) return;
 
     try {
+      setIsLoadingWalletList(true);
       const response = await fetch(fullUrl, {
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +38,8 @@ const WalletsRow = (props: Props) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      props.setWalletList(data.wallets);
+      setAccounts(data.wallets);
+      setIsLoadingWalletList(false);
     } catch (error) {
       console.error("Error fetching wallets:", error);
     }
@@ -129,57 +47,32 @@ const WalletsRow = (props: Props) => {
 
   useEffect(() => {
     fetchWallets();
-  }, [user]);
+  }, [user?.uid]);
 
   return (
     <header>
-      <p>
-        {props.walletList?.map((e) =>
-          e == props.currentWallet ? (
-            <a key={e.classicAddress}>
-              <b>
-                <Identicon
-                  thisWallet={e}
-                  setCurrentWallet={props.setCurrentWallet}
-                  classicAddress={e.classicAddress}
-                />
-              </b>
-            </a>
-          ) : (
-            <a key={e.publicKey}>
-              <i>
-                <Identicon
-                  thisWallet={e}
-                  setCurrentWallet={props.setCurrentWallet}
-                  classicAddress={e.classicAddress}
-                />
-              </i>
-            </a>
-          )
-        )}
-        <a
-          onClick={() => {
-            fetchNewWalletData();
-          }}
-        >
-          <i>{isLoading ? "Loading..." : "New wallet"}</i>
-        </a>
-        <button
-          onClick={async () => {
-            await handleSaveWallet();
-          }}
-        >
-          Save Wallets
-        </button>{" "}
-        {"  "}
-        <button
-          onClick={async () => {
-            await handleDeleteAllWallets();
-          }}
-        >
-          Delete All
-        </button>
-      </p>
+      <>
+        <NewWallet />
+        <SaveWallet />
+        <DeleteAll />
+        <div>
+          {accounts?.map((e) =>
+            e == account ? (
+              <a key={e.classicAddress}>
+                <b>
+                  <Identicon thisWallet={e} classicAddress={e.classicAddress} />
+                </b>
+              </a>
+            ) : (
+              <a key={e.publicKey}>
+                <i>
+                  <Identicon thisWallet={e} classicAddress={e.classicAddress} />
+                </i>
+              </a>
+            )
+          )}
+        </div>
+      </>
     </header>
   );
 };
